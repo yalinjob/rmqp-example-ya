@@ -56,7 +56,7 @@ jobs:
             -f  consumer/Dockerfile  \
             -t "${CONSUMER_IMG}" \
             -t "${CONSUMER_LATEST}" \
-            .
+               consumer/
 
           docker push "${CONSUMER_IMG}"
           docker push "${CONSUMER_LATEST}"
@@ -71,7 +71,7 @@ jobs:
             -f  producer/Dockerfile \
             -t "${PRODUCER_IMG}" \
             -t "${PRODUCER_LATEST}" \
-            .
+            producer/
 
           docker push "${PRODUCER_IMG}"
           docker push "${PRODUCER_LATEST}"
