@@ -53,7 +53,7 @@ jobs:
           CONSUMER_LATEST="${ECR_REGISTRY}/${ECR_REPOSITORY}:consumer-latest"
 
           docker build \
-            -f Dockerfile.consumer \
+            -f master/consumer/Dockerfile  \
             -t "${CONSUMER_IMG}" \
             -t "${CONSUMER_LATEST}" \
             .
@@ -68,7 +68,7 @@ jobs:
           PRODUCER_LATEST="${ECR_REGISTRY}/${ECR_REPOSITORY}:producer-latest"
 
           docker build \
-            -f Dockerfile.producer \
+            -f master/producer/Dockerfile \
             -t "${PRODUCER_IMG}" \
             -t "${PRODUCER_LATEST}" \
             .
