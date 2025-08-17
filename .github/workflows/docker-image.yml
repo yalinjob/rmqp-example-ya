@@ -1,0 +1,87 @@
+name: Build and Push to ECR (consumer, producer, rabbitmq)
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+env:
+  AWS_REGION: eu-north-1
+  ECR_REGISTRY: 925310216015.dkr.ecr.eu-north-1.amazonaws.com
+  ECR_REPOSITORY: yalinreop-test
+  RABBITMQ_SOURCE_IMAGE: rabbitmq:3-management
+  # You can pin a specific SHA tag for reproducibility as well:
+  # RABBITMQ_SOURCE_IMAGE: rabbitmq@sha256:<digest>
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      id-token: write  # required if you later switch to OIDC auth with AWS
+
+    steps:
+      - name: Checkout
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: ecr-login
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Ensure ECR repository exists
+        run: |
+          set -e
+          if ! aws ecr describe-repositories --repository-names "${ECR_REPOSITORY}" >/dev/null 2>&1; then
+            aws ecr create-repository --repository-name "${ECR_REPOSITORY}" >/dev/null
+            echo "Created ECR repository: ${ECR_REPOSITORY}"
+          else
+            echo "ECR repository already exists: ${ECR_REPOSITORY}"
+          fi
+
+      - name: Build & push consumer image
+        run: |
+          set -e
+          CONSUMER_IMG="${ECR_REGISTRY}/${ECR_REPOSITORY}:consumer-${GITHUB_SHA}"
+          CONSUMER_LATEST="${ECR_REGISTRY}/${ECR_REPOSITORY}:consumer-latest"
+
+          docker build \
+            -f Dockerfile.consumer \
+            -t "${CONSUMER_IMG}" \
+            -t "${CONSUMER_LATEST}" \
+            .
+
+          docker push "${CONSUMER_IMG}"
+          docker push "${CONSUMER_LATEST}"
+
+      - name: Build & push producer image
+        run: |
+          set -e
+          PRODUCER_IMG="${ECR_REGISTRY}/${ECR_REPOSITORY}:producer-${GITHUB_SHA}"
+          PRODUCER_LATEST="${ECR_REGISTRY}/${ECR_REPOSITORY}:producer-latest"
+
+          docker build \
+            -f Dockerfile.producer \
+            -t "${PRODUCER_IMG}" \
+            -t "${PRODUCER_LATEST}" \
+            .
+
+          docker push "${PRODUCER_IMG}"
+          docker push "${PRODUCER_LATEST}"
+
+      - name: Pull RabbitMQ from Docker Hub, retag, and push to ECR
+        run: |
+          set -e
+          RABBIT_TAG="${ECR_REGISTRY}/${ECR_REPOSITORY}:rabbitmq-3-management"
+
+          docker pull "${RABBITMQ_SOURCE_IMAGE}"
+          docker tag "${RABBITMQ_SOURCE_IMAGE}" "${RABBIT_TAG}"
+
+          docker push "${RABBIT_TAG}"
