@@ -10,8 +10,6 @@ env:
   ECR_REGISTRY: 925310216015.dkr.ecr.eu-north-1.amazonaws.com
   ECR_REPOSITORY: yalinreop-test
   RABBITMQ_SOURCE_IMAGE: rabbitmq:3-management
-  # You can pin a specific SHA tag for reproducibility as well:
-  # RABBITMQ_SOURCE_IMAGE: rabbitmq@sha256:<digest>
 
 jobs:
   build-and-push:
@@ -19,11 +17,11 @@ jobs:
 
     permissions:
       contents: read
-      id-token: write  # required if you later switch to OIDC auth with AWS
+      id-token: write
 
     steps:
       - name: Checkout
-      - uses: actions/checkout@v4
+        uses: actions/checkout@v4
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -83,5 +81,4 @@ jobs:
 
           docker pull "${RABBITMQ_SOURCE_IMAGE}"
           docker tag "${RABBITMQ_SOURCE_IMAGE}" "${RABBIT_TAG}"
-
           docker push "${RABBIT_TAG}"
