@@ -1,0 +1,16 @@
+auth:
+  username: user
+  password: CHANGEME
+
+service:
+  type: ClusterIP
+
+persistence:
+  enabled: true
+  size: 8Gi
+  storageClass: ""   # set to your SC if needed
+
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: false

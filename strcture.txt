@@ -1,0 +1,25 @@
+k8s-project/
+├─ .github/
+│  └─ workflows/
+│     ├─ ci-images.yml          # build & push producer/consumer images
+│     └─ cd-helm.yml            # deploy charts to K8s with Helm
+├─ charts/
+│  ├─ producer/
+│  │  ├─ Chart.yaml
+│  │  ├─ values.yaml
+│  │  └─ templates/
+│  │     ├─ deployment.yaml
+│  │     └─ service.yaml
+│  └─ consumer/
+│     ├─ Chart.yaml
+│     ├─ values.yaml
+│     └─ templates/
+│        ├─ deployment.yaml
+│        └─ service.yaml
+├─ rabbitmq/
+│  ├─ values-bitnami.yaml       # Bitnami RabbitMQ (with persistence)
+│  └─ exporter-values.yaml      # prometheus-community exporter values
+├─ docs/
+│  ├─ HOWTO.md
+│  └─ promql.md
+└─ README.md

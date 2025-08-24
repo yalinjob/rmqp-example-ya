@@ -1,0 +1,18 @@
+replicaCount: 1
+
+image:
+  repository: REPLACE_ME/producer
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8080
+
+env:
+  RABBITMQ_HOST: rabbitmq
+  RABBITMQ_PORT: "5672"
+  RABBITMQ_USER: user
+  RABBITMQ_PASSWORD: CHANGEME   # override with --set or a Secret
+  RABBITMQ_QUEUE: demo-queue
+  MESSAGE_INTERVAL_SECONDS: "20"

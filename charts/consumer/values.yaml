@@ -1,0 +1,17 @@
+replicaCount: 1
+
+image:
+  repository: REPLACE_ME/consumer
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 9422   # metrics
+
+env:
+  RABBITMQ_HOST: rabbitmq
+  RABBITMQ_PORT: "5672"
+  RABBITMQ_USER: user
+  RABBITMQ_PASSWORD: CHANGEME
+  RABBITMQ_QUEUE: demo-queue
