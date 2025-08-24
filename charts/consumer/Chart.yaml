@@ -1,0 +1,6 @@
+apiVersion: v2
+name: consumer
+description: Consumer that reads messages from RabbitMQ and prints to STDOUT
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
