@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: REPLACE_ME/producer
+  repository: 925310216015.dkr.ecr.eu-north-1.amazonaws.com/yalinreop-test:producer-latest
   tag: "latest"
   pullPolicy: IfNotPresent
 

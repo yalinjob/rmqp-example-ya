@@ -1,7 +1,8 @@
+Values Consumer
 replicaCount: 1
 
 image:
-  repository: REPLACE_ME/consumer
+  repository: 925310216015.dkr.ecr.eu-north-1.amazonaws.com/yalinreop-test:consumer-latest
   tag: "latest"
   pullPolicy: IfNotPresent
 
